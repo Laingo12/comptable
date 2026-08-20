@@ -1,0 +1,91 @@
+[
+  {
+    "source": "produit",
+    "title": "T-shirt en coton bio",
+    "content": "T-shirt en coton biologique cultivé sans pesticides. Fabriqué au Portugal dans un atelier familial. Matière: 100% coton bio certifié GOTS. Coupe droite, col rond. Disponible en blanc, noir, marine. Prix: 45€. Entretien: lavage à 30°C.",
+    "metadata": {
+      "price": 45,
+      "category": "haut",
+      "colors": ["blanc", "noir", "marine"],
+      "sizes": ["S", "M", "L", "XL"],
+      "origin": "Portugal",
+      "image": "tshirt.jpg"
+    }
+  },
+  {
+    "source": "produit",
+    "title": "Sweat-shirt molletonné",
+    "content": "Sweat-shirt en coton molletonné 380g/m². Fabriqué en Italie. Matière: 100% coton peigné. Coupe légèrement oversized. Bord-côtes aux poignets et à la taille. Disponible en gris chiné, noir, bleu nuit. Prix: 85€.",
+    "metadata": {
+      "price": 85,
+      "category": "haut",
+      "colors": ["gris chiné", "noir", "bleu nuit"],
+      "sizes": ["S", "M", "L", "XL"],
+      "origin": "Italie",
+      "image": "sweat.jpg"
+    }
+  },
+  {
+    "source": "produit",
+    "title": "Veste de travail",
+    "content": "Veste de travail en twill de coton épais. Fabriquée en France. Matière: 100% coton twill 340g/m². Doublure en coton. Trois poches extérieures, une poche intérieure. Fermeture par boutons-pression. Prix: 120€.",
+    "metadata": {
+      "price": 120,
+      "category": "veste",
+      "colors": ["kaki", "noir", "bleu de travail"],
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "origin": "France",
+      "image": "veste.jpg"
+    }
+  },
+  {
+    "source": "produit",
+    "title": "Jean droit",
+    "content": "Jean coupe droite en denim Candiani 13oz. Fabriqué en Italie. Matière: 100% coton denim. Coupe droite, taille mi-haute. Finitions en cuir végétal. Prix: 95€.",
+    "metadata": {
+      "price": 95,
+      "category": "bas",
+      "colors": ["indigo brut", "noir"],
+      "sizes": ["28", "30", "32", "34", "36"],
+      "origin": "Italie",
+      "image": "jean.jpg"
+    }
+  },
+  {
+    "source": "produit",
+    "title": "Chemise en oxford",
+    "content": "Chemise en coton oxford 150g/m². Fabriquée au Portugal. Matière: 100% coton oxford. Col boutonné, poignets ajustables. Prix: 75€.",
+    "metadata": {
+      "price": 75,
+      "category": "haut",
+      "colors": ["blanc", "bleu ciel", "rayé bleu"],
+      "sizes": ["S", "M", "L", "XL"],
+      "origin": "Portugal",
+      "image": "chemise/oxford-bleu.jpg"
+    }
+  },
+  {
+    "source": "faq",
+    "title": "Délais de livraison",
+    "content": "Livraison standard: 3-5 jours ouvrés (gratuite dès 80€ d'achat). Livraison express: 1-2 jours ouvrés (9,90€). Les commandes sont expédiées depuis notre entrepôt en France. Suivi de commande disponible par email.",
+    "metadata": { "type": "livraison" }
+  },
+  {
+    "source": "faq",
+    "title": "Politique de retour",
+    "content": "Retours gratuits sous 14 jours après réception. Les articles doivent être non portés, non lavés, avec leurs étiquettes. Remboursement sous 7 jours ouvrés après réception du retour. Échange gratuit disponible.",
+    "metadata": { "type": "retour" }
+  },
+  {
+    "source": "faq",
+    "title": "Matières et entretien",
+    "content": "Tous nos produits sont fabriqués en Europe (Portugal, Italie, France). Nous utilisons des matières naturelles certifiées: coton bio GOTS, denim Candiani, laine mulesing-free. Lavage recommandé à 30°C pour préserver les fibres.",
+    "metadata": { "type": "matieres" }
+  },
+  {
+    "source": "faq",
+    "title": "À propos de la marque",
+    "content": "Nous créons des vêtements durables et intemporels, conçus pour résister au temps et aux tendances. Production en précommande pour éviter le gaspillage. Ateliers partenaires en Europe sélectionnés pour leur savoir-faire.",
+    "metadata": { "type": "marque" }
+  }
+]

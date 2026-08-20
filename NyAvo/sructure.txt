@@ -1,0 +1,17 @@
+D:\NyAvo\
+├── main.py
+├── config.py
+├── requirements.txt
+├── seed_data.py
+├── .env
+├── core/
+│   ├── agent.py
+│   ├── rag.py
+│   └── admin.py
+├── integrations/
+│   └── gemini.py
+└── static/
+    ├── admin.html
+    ├── index.html
+    └── images/
+        └── (apetrakao ny sarinao)

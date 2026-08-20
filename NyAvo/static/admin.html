@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backoffice - DAMART</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f5f7fb; color: #1a1a2e; padding: 30px; }
+    h1 { margin-bottom: 30px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+    .tab { padding: 10px 18px; background: white; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.9rem; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .tab.active { background: #1a1a2e; color: white; }
+    .panel { display: none; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .panel.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eef0f5; }
+    th { background: #f8f9fc; font-weight: 600; }
+    tr:hover { background: #fafbfe; }
+    form { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; align-items: end; }
+    form input, form select, form textarea { padding: 10px; border: 1px solid #dcdde5; border-radius: 6px; font-size: 0.9rem; }
+    form button { grid-column: 1 / -1; justify-self: start; padding: 12px 28px; background: #1a1a2e; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button.delete-btn { background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; }
+    .msg { margin: 10px 0; color: #2ecc71; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Backoffice DAMART</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="products">📦 Produits</div>
+    <div class="tab" data-tab="faq">❓ FAQ</div>
+    <div class="tab" data-tab="orders">🚚 Commandes</div>
+    <div class="tab" data-tab="clients">👥 Clients</div>
+    <div class="tab" data-tab="promotions">🏷️ Promos</div>
+    <div class="tab" data-tab="payments">💳 Paiements</div>
+    <div class="tab" data-tab="deliveries">📬 Livraisons</div>
+    <div class="tab" data-tab="agents">🤖 Agents</div>
+    <div class="tab" data-tab="conversations">💬 Conversations</div>
+    <div class="tab" data-tab="settings">⚙️ Paramètres</div>
+  </div>
+
+  <div id="panel-products" class="panel active"></div>
+  <div id="panel-faq" class="panel"></div>
+  <div id="panel-orders" class="panel"></div>
+  <div id="panel-clients" class="panel"></div>
+  <div id="panel-promotions" class="panel"></div>
+  <div id="panel-payments" class="panel"></div>
+  <div id="panel-deliveries" class="panel"></div>
+  <div id="panel-agents" class="panel"></div>
+  <div id="panel-conversations" class="panel"></div>
+  <div id="panel-settings" class="panel"></div>
+  <div class="msg" id="message"></div>
+
+  <script>
+    const API = '/api';
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + tabName).classList.add('active');
+        loadTab(tabName);
+      });
+    });
+
+    loadTab('products');
+
+    async function loadTab(tab) {
+      const panel = document.getElementById('panel-' + tab);
+      panel.innerHTML = '<p>Chargement...</p>';
+      let data = {};
+      try {
+        const res = await fetch(`${API}/${tab}`);
+        data = await res.json();
+      } catch (e) {
+        panel.innerHTML = '<p style="color:red">Erreur de chargement.</p>';
+        return;
+      }
+      renderTab(tab, data);
+    }
+
+    function renderTab(tab, data) {
+      const panel = document.getElementById('panel-' + tab);
+      let html = '';
+      if (tab === 'settings') {
+        const s = data.settings || {};
+        html += `<h2>Paramètres de l'entreprise</h2>
+        <form id="form-settings" enctype="multipart/form-data">
+          <label>Nom :</label><input name="company_name" value="${s.company_name||''}">
+          <label>Adresses :</label><textarea name="addresses">${s.addresses||''}</textarea>
+          <label>Téléphone :</label><input name="phone" value="${s.phone||''}">
+          <label>Horaires :</label><input name="hours" value="${s.hours||''}">
+          <label>Logo :</label><input type="file" name="logo">
+          <label>Politique de retour (PDF) :</label><input type="file" name="return_policy">
+          <label>Livraison (PDF) :</label><input type="file" name="delivery_info">
+          <button type="submit">Enregistrer</button>
+        </form>`;
+        panel.innerHTML = html;
+        document.getElementById('form-settings').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          await fetch(`${API}/settings`, { method:'POST', body: formData });
+          document.getElementById('message').innerText = 'Paramètres mis à jour.';
+          loadTab('settings');
+        });
+        return;
+      }
+
+      const items = data[tab] || [];
+      html += `<h2>${tab.charAt(0).toUpperCase()+tab.slice(1)}</h2><table><thead><tr>`;
+      const cols = getColumns(tab);
+      cols.forEach(c => html += `<th>${c.label}</th>`);
+      html += '<th>Action</th></tr></thead><tbody>';
+      items.forEach(item => {
+        html += '<tr>';
+        cols.forEach(c => {
+          let val = item[c.field];
+          if (val === null || val === undefined) val = '';
+          if (typeof val === 'object') val = JSON.stringify(val).substring(0,50);
+          html += `<td>${val}</td>`;
+        });
+        html += `<td><button class="delete-btn" onclick="deleteItem('${tab}',${item.id})">🗑️</button></td>`;
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+
+      if (tab !== 'conversations') {
+        html += '<h3>Ajouter</h3>';
+        html += getFormHTML(tab);
+      }
+      panel.innerHTML = html;
+      attachFormHandler(tab);
+    }
+
+    function getColumns(tab) {
+      const cols = {
+        products: [{label:'ID',field:'id'},{label:'Nom',field:'name'},{label:'Cat.',field:'category'},{label:'Prix',field:'price'},{label:'Promo',field:'promotion'},{label:'Stock',field:'stock'},{label:'Dispo',field:'available'}],
+        faq: [{label:'ID',field:'id'},{label:'Question',field:'question'},{label:'Cat.',field:'category'}],
+        orders: [
+          {label:'ID',field:'id'},{label:'N°',field:'order_number'},{label:'Client',field:'customer_name'},
+          {label:'Produit',field:'product_name'},{label:'Date',field:'date'},{label:'Statut',field:'status'}
+        ],
+        clients: [{label:'ID',field:'id'},{label:'Nom',field:'name'},{label:'Email',field:'email'}],
+        promotions: [{label:'ID',field:'id'},{label:'Nom',field:'name'},{label:'Code',field:'code'},{label:'Remise',field:'discount'}],
+        payments: [{label:'ID',field:'id'},{label:'Commande',field:'order_number'},{label:'Moyen',field:'method'},{label:'Statut',field:'status'}],
+        deliveries: [{label:'ID',field:'id'},{label:'Commande',field:'order_number'},{label:'Transporteur',field:'carrier'},{label:'Statut',field:'status'}],
+        agents: [{label:'ID',field:'id'},{label:'Nom',field:'name'},{label:'Mission',field:'mission'},{label:'Statut',field:'status'}],
+        conversations: [{label:'ID',field:'id'},{label:'Client',field:'client_email'},{label:'Date',field:'date'},{label:'Résumé',field:'summary'},{label:'Agent',field:'agent_used'}]
+      };
+      return cols[tab] || [];
+    }
+
+    function getFormHTML(tab) {
+      const forms = {
+        products: `<form id="form-products" enctype="multipart/form-data">
+          <input name="name" placeholder="Nom" required><input name="description" placeholder="Description">
+          <input name="price" type="number" step="0.01" placeholder="Prix" required>
+          <input name="promotion" placeholder="Promotion"><input name="stock" type="number" placeholder="Stock">
+          <select name="available"><option value="1">Disponible</option><option value="0">Indisponible</option></select>
+          <input name="colors" placeholder="Couleurs (rouge, bleu)"><input name="sizes" placeholder="Tailles (S, M, L)">
+          <input name="features" placeholder="Caractéristiques (JSON)"><input name="similar_products" placeholder="IDs similaires">
+          <select name="category"><option value="">Catégorie</option><option value="homme">Homme</option><option value="femme">Femme</option><option value="collection">Collection</option></select>
+          <input type="file" name="image"><button type="submit">Ajouter</button></form>`,
+        faq: `<form id="form-faq"><input name="question" placeholder="Question" required><input name="answer" placeholder="Réponse" required><input name="category" placeholder="Catégorie"><button type="submit">Ajouter</button></form>`,
+        orders: `<form id="form-orders">
+          <input name="order_number" placeholder="N° commande (ex: CMD-2026-1042)" required>
+          <input name="customer_id" type="number" placeholder="ID Client" required>
+          <input name="product_id" type="number" placeholder="ID Produit" required>
+          <input name="order_date" type="date" placeholder="Date de commande">
+          <input name="status" placeholder="Statut" required>
+          <input name="carrier" placeholder="Transporteur">
+          <input name="tracking" placeholder="Suivi">
+          <input name="estimated" placeholder="Date estimée">
+          <input name="payment" placeholder="Paiement">
+          <button type="submit">Ajouter</button></form>`,
+        clients: `<form id="form-clients"><input name="name" placeholder="Nom" required><input name="email" placeholder="Email" required><input name="phone" placeholder="Téléphone"><input name="purchase_history" placeholder="Historique achats (JSON)"><input name="favorite_products" placeholder="Produits favoris (JSON)"><input name="preferences" placeholder="Préférences (JSON)"><button type="submit">Ajouter</button></form>`,
+        promotions: `<form id="form-promotions"><input name="name" placeholder="Nom" required><input name="code" placeholder="Code" required><input name="discount" placeholder="Réduction" required><input name="start_date" type="date" required><input name="end_date" type="date" required><input name="conditions" placeholder="Conditions"><button type="submit">Ajouter</button></form>`,
+        payments: `<form id="form-payments">
+          <input name="order_number" placeholder="N° commande (ex: CMD-2026-1042)" required>
+          <input name="method" placeholder="Moyen (CB, PayPal)">
+          <input name="status" placeholder="Statut (Payé, Échec)">
+          <input name="failure_reason" placeholder="Motif échec">
+          <input name="refund" placeholder="Remboursement (montant)">
+          <button type="submit">Ajouter</button></form>`,
+        deliveries: `<form id="form-deliveries">
+          <input name="order_number" placeholder="N° commande (ex: CMD-2026-1042)" required>
+          <input name="carrier" placeholder="Transporteur">
+          <input name="status" placeholder="Statut">
+          <input name="position" placeholder="Position">
+          <label>Retard <input type="checkbox" name="delay" value="1"></label>
+          <input name="estimated_date" type="date">
+          <button type="submit">Ajouter</button></form>`,
+        agents: `<form id="form-agents" enctype="multipart/form-data">
+          <input name="name" placeholder="Nom" required>
+          <input name="mission" placeholder="Mission" required>
+          <select name="status"><option value="active">Actif</option><option value="inactif">Inactif</option></select>
+          <input type="file" name="knowledge_file" accept=".txt,.pdf,.json,.docx">
+          <button type="submit">Ajouter</button></form>`
+      };
+      return forms[tab] || '';
+    }
+
+    function attachFormHandler(tab) {
+      const form = document.getElementById(`form-${tab}`);
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        if (tab === 'deliveries') formData.set('delay', formData.get('delay') === '1');
+        await fetch(`${API}/${tab}`, { method:'POST', body: formData });
+        document.getElementById('message').innerText = 'Ajouté avec succès.';
+        form.reset();
+        loadTab(tab);
+      });
+    }
+
+    async function deleteItem(type, id) {
+      if (!confirm('Supprimer ?')) return;
+      await fetch(`${API}/${type}/${id}`, { method:'DELETE' });
+      document.getElementById('message').innerText = 'Supprimé.';
+      loadTab(type);
+    }
+  </script>
+</body>
+</html>

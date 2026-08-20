@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAMART – L'essentiel durable</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #1a1a1a; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 25px 40px; border-bottom: 1px solid #f2f2f2; position: sticky; top: 0; background: white; z-index: 100; }
+    .logo { font-size: 1.8rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 12px; }
+    .logo img { height: 40px; }
+    .nav-links { display: flex; gap: 40px; }
+    .nav-links a { text-decoration: none; color: #1a1a1a; font-size: 0.95rem; font-weight: 500; cursor: pointer; }
+    .nav-links a.active { color: #c4a47c; border-bottom: 2px solid #c4a47c; }
+
+    .search-container { max-width: 1440px; margin: 0 auto; padding: 30px 40px; }
+    .search-input { width: 100%; padding: 16px 20px; font-size: 1rem; border: 1px solid #ddd; outline: none; }
+    .search-results { display: none; border: 1px solid #eee; margin-top: 5px; }
+    .search-results div { padding: 15px 20px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+    .search-results div:hover { background: #f9f9f9; }
+
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 90vh; align-items: center; background: #fafafa; }
+    .hero-text { padding: 60px; }
+    .hero-text h1 { font-size: 3.5rem; font-weight: 600; line-height: 1.1; margin-bottom: 30px; }
+    .hero-text p { font-size: 1.25rem; color: #555; margin-bottom: 40px; }
+    .btn { display: inline-block; background: #1a1a1a; color: white; padding: 18px 44px; text-decoration: none; font-weight: 600; font-size: 0.95rem; text-transform: uppercase; border: none; cursor: pointer; }
+    .hero-image img { width: 100%; height: 90vh; object-fit: cover; }
+
+    .products-section { max-width: 1440px; margin: 0 auto; padding: 100px 40px; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+    .product-card { text-align: center; }
+    .product-card img { aspect-ratio: 3/4; object-fit: cover; margin-bottom: 20px; }
+
+    .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+    .chat-icon { width: 60px; height: 60px; background: #1a1a1a; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .chat-box { display: none; position: absolute; bottom: 80px; right: 0; width: 380px; background: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); overflow: hidden; }
+    .chat-header { background: #1a1a1a; color: white; padding: 16px; font-weight: 600; }
+    .chat-messages { height: 350px; overflow-y: auto; padding: 16px; font-size: 0.95rem; }
+    .chat-messages .msg { margin: 8px 0; padding: 10px 14px; border-radius: 12px; max-width: 85%; word-wrap: break-word; }
+    .chat-messages .msg.user { background: #1a1a1a; color: white; margin-left: auto; }
+    .chat-messages .msg.agent { background: #f0f0f0; color: #1a1a1a; }
+    .chat-messages .msg.sources { font-size: 0.75rem; color: #888; margin-top: 2px; font-style: italic; }
+    .chat-messages .msg img { max-width: 150px; border-radius: 8px; margin-top: 8px; }
+    .chat-input { display: flex; border-top: 1px solid #eee; }
+    .chat-input input { flex: 1; padding: 14px; border: none; outline: none; font-size: 0.95rem; }
+    .chat-input button { background: #1a1a1a; color: white; border: none; padding: 14px 24px; cursor: pointer; font-weight: 600; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-text { padding: 40px 20px; order: 2; }
+      .hero-text h1 { font-size: 2.5rem; }
+      .hero-image img { height: 50vh; }
+      .chat-box { width: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo" id="companyName">DAMART</div>
+    <nav class="nav-links">
+      <a data-category="homme">Homme</a>
+      <a data-category="femme">Femme</a>
+      <a data-category="collection">Collections</a>
+      <a href="#" onclick="scrollToProducts()">À propos</a>
+    </nav>
+  </header>
+
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Rechercher un produit..." id="searchInput" autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Le jean parfait.<br>Rien de moins.</h1>
+      <p>Conçu pour durer, fabriqué en Europe avec les meilleurs ateliers.</p>
+      <a href="#" class="btn" onclick="scrollToProducts()">Découvrir la collection</a>
+    </div>
+    <div class="hero-image">
+      <img src="/static/images/hero-jean.jpg" alt="Jean de qualité"
+           onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlZWUiLz48L3N2Zz4='">
+    </div>
+  </section>
+
+  <section class="products-section" id="productsSection">
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <div class="chat-widget">
+    <div class="chat-icon" id="chatIcon">💬</div>
+    <div class="chat-box" id="chatBox">
+      <div class="chat-header">Chat avec Alex</div>
+      <div style="padding: 8px 16px; border-bottom: 1px solid #eee;">
+        <input type="email" id="chatEmail" placeholder="Votre email (optionnel)" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;">
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg agent">Bonjour ! Je suis Alex. Comment puis-je vous aider ?</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Votre message...">
+        <button id="chatSend">Envoyer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Placeholder intégré pour les images manquantes (évite les boucles)
+    const PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlZWUiLz48L3N2Zz4=';
+
+    // Chargement des paramètres de l'entreprise
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.settings) {
+          const s = data.settings;
+          if (s.company_name) {
+            document.getElementById('companyName').textContent = s.company_name;
+            document.title = s.company_name + " – L'essentiel durable";
+          }
+          if (s.logo) {
+            const logoDiv = document.getElementById('companyName');
+            const img = document.createElement('img');
+            img.src = '/static/' + s.logo;
+            img.alt = s.company_name || 'Logo';
+            img.style.height = '40px';
+            logoDiv.innerHTML = '';
+            logoDiv.appendChild(img);
+          }
+        }
+      })
+      .catch(err => console.log('Paramètres non chargés'));
+
+    // Gestion des produits et catégories
+    let allProducts = [];
+    let currentCategory = 'all';
+
+    document.querySelectorAll('.nav-links a[data-category]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+        currentCategory = link.dataset.category;
+        filterAndRenderProducts();
+        scrollToProducts();
+      });
+    });
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('/api/products');
+        const data = await response.json();
+        allProducts = data.products || [];
+        filterAndRenderProducts();
+      } catch (err) {
+        console.error('Erreur chargement produits:', err);
+      }
+    }
+    loadProducts();
+
+    function filterAndRenderProducts() {
+      const grid = document.getElementById('productGrid');
+      let filtered = allProducts;
+      if (currentCategory !== 'all') {
+        filtered = allProducts.filter(p => p.category && p.category.toLowerCase() === currentCategory);
+      }
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:#888;">Aucun produit dans cette catégorie.</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        let imageUrl = PLACEHOLDER;
+        if (p.image) {
+          const filename = String(p.image).replace(/['"]/g, '').trim();
+          if (filename) imageUrl = '/static/images/' + filename;
+        }
+        return `
+          <div class="product-card">
+            <img src="${imageUrl}" alt="${p.name}" onerror="this.onerror=null;this.src='${PLACEHOLDER}';">
+            <h3>${p.name}</h3>
+            <p>${p.price ? p.price + ' €' : ''}</p>
+          </div>`;
+      }).join('');
+    }
+
+    function scrollToProducts() {
+      document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Recherche
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    searchInput.addEventListener('input', async () => {
+      const query = searchInput.value.trim();
+      if (query.length < 2) { searchResults.style.display = 'none'; return; }
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          searchResults.innerHTML = data.results
+            .map(r => `<div>🔍 ${r.name} — ${r.description?.substring(0, 100) || ''}...</div>`)
+            .join('');
+          searchResults.style.display = 'block';
+        } else {
+          searchResults.innerHTML = '<div style="padding:15px;color:#888;">Aucun résultat trouvé.</div>';
+          searchResults.style.display = 'block';
+        }
+      } catch (err) {
+        console.log('Recherche indisponible:', err);
+        searchResults.style.display = 'none';
+      }
+    });
+
+    // Chatbot
+    const chatIcon = document.getElementById('chatIcon');
+    const chatBox = document.getElementById('chatBox');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const chatEmail = document.getElementById('chatEmail');
+    let chatHistory = [];
+
+    chatIcon.addEventListener('click', () => {
+      chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+    });
+
+    chatSend.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      const email = chatEmail.value.trim();
+
+      // Affiche le message utilisateur
+      chatMessages.innerHTML += `<div class="msg user">${message}</div>`;
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, history: chatHistory, email: email })
+        });
+        const data = await response.json();
+
+        let html = `<div class="msg agent">${data.response}</div>`;
+
+        // Affichage de l'image du produit si elle existe
+        if (data.product_image) {
+          html += `<div class="msg agent" style="text-align:center;">
+            <img src="${data.product_image}" alt="Produit recommandé" onerror="this.onerror=null;this.style.display='none';">
+          </div>`;
+        }
+
+        if (data.agent_used) {
+          html += `<div class="msg sources">🤖 Agent actif : ${data.agent_used}</div>`;
+        }
+        if (data.sources && data.sources.length) {
+          html += `<div class="msg sources">📚 Sources: ${data.sources.join(', ')}</div>`;
+        }
+
+        chatMessages.innerHTML += html;
+
+        // Mise à jour de l'historique
+        chatHistory.push({ role: 'user', content: message });
+        chatHistory.push({ role: 'assistant', content: data.response });
+        if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+
+      } catch (err) {
+        chatMessages.innerHTML += `<div class="msg agent">Désolé, le service est momentanément indisponible. Veuillez réessayer.</div>`;
+      }
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+</body>
+</html>
