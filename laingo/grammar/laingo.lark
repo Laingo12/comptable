@@ -1,0 +1,95 @@
+// grammar/laingo.lark — LAINGO v0.1 (Étape 2)
+// Ajout : opérateurs logiques ary / na / tsy, avec précédence Python-like.
+// + lookahead (?!\w) sur tous les mots-clés pour ne pas casser les identifiants.
+
+start: (_NL | stmt)*
+
+%declare _INDENT _DEDENT
+
+?stmt: assignment
+     | print_stmt
+     | return_stmt
+     | if_stmt
+     | while_stmt
+     | func_def
+
+assignment: NAME (":" type_ref)? "=" expr _NL
+
+print_stmt: _MAMOAKA "(" expr ")" _NL
+return_stmt: _AVERENO expr _NL
+
+if_stmt: _RAIHA expr ":" suite (raha_tsy_izany_branch)*
+raha_tsy_izany_branch: _RAIHA_TSY_IZANY expr? ":" suite
+
+while_stmt: _REHEFA expr ":" suite
+
+func_def: _ASA NAME "(" [params] ")" "->" type_ref ":" suite
+params: param ("," param)*
+param: NAME ":" type_ref
+
+suite: _NL _INDENT stmt+ _DEDENT
+
+type_ref: ISA | DESIMALY | MARINA | TEKSTA
+
+// ---------- Expressions (précédence : plus bas -> plus haut) ----------
+// na (or)  <  ary (and)  <  tsy (not)  <  comparaisons
+//          <  + -  <  * /  <  - unaire  <  atomes
+?expr: or_expr
+
+?or_expr: or_expr _NA and_expr -> or_
+        | and_expr
+
+?and_expr: and_expr _ARY not_expr -> and_
+         | not_expr
+
+?not_expr: _TSY not_expr -> not_
+         | cmp_expr
+
+// cmp_expr : une comparaison simple, ou une chaîne (à rejeter avec message clair).
+cmp_expr: sum (COMP_OP sum)*
+
+?sum: product
+    | sum "+" product -> add
+    | sum "-" product -> sub
+?product: unary
+        | product "*" unary -> mul
+        | product "/" unary -> div
+?unary: atom
+      | "-" unary -> neg
+?atom: NUMBER  -> number
+     | STRING  -> string
+     | MARINA  -> marina
+     | DISO    -> diso
+     | NAME "(" [args] ")" -> call
+     | NAME    -> name
+     | "(" expr ")"
+
+args: expr ("," expr)*
+
+// --- mots-clés (underscore => filtrés de l'arbre ; (?!\w) = sécurité identifiants) ---
+_MAMOAKA.10:         /mamoaka(?!\w)/
+_RAIHA_TSY_IZANY.11: /raha_tsy_izany(?!\w)/
+_RAIHA.10:           /raha(?!\w)/
+_REHEFA.10:          /rehefa(?!\w)/
+_ASA.10:             /asa(?!\w)/
+_AVERENO.10:         /avereno(?!\w)/
+_ARY.10:             /ary(?!\w)/
+_NA.10:              /na(?!\w)/
+_TSY.10:             /tsy(?!\w)/
+
+// --- terminaux visibles (gardés dans l'arbre) ---
+MARINA.10:   /Marina(?!\w)/
+DISO.10:     /Diso(?!\w)/
+ISA.10:      /Isa(?!\w)/
+DESIMALY.10: /Desimaly(?!\w)/
+TEKSTA.10:   /Teksta(?!\w)/
+
+COMP_OP: "==" | "!=" | "<=" | ">=" | "<" | ">"
+NAME:    /[a-zA-Z_][a-zA-Z_0-9]*/
+NUMBER:  /[0-9]+(\.[0-9]+)?/
+STRING:  /"[^"\n]*"/
+
+_NL: /(\r?\n[\t ]*)+/
+
+%ignore /[ \t]+/
+%ignore /\/\/[^\n]*/

@@ -1,0 +1,5 @@
+// boucle.mg — fanisana 1..5 amin'ny rehefa (while)
+i: Isa = 1
+rehefa i <= 5:
+    mamoaka(i)
+    i = i + 1

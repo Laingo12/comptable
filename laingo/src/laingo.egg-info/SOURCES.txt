@@ -1,0 +1,16 @@
+README.md
+pyproject.toml
+src/laingo/__init__.py
+src/laingo/cli.py
+src/laingo.egg-info/PKG-INFO
+src/laingo.egg-info/SOURCES.txt
+src/laingo.egg-info/dependency_links.txt
+src/laingo.egg-info/entry_points.txt
+src/laingo.egg-info/requires.txt
+src/laingo.egg-info/top_level.txt
+src/laingo/ast/__init__.py
+src/laingo/ast/nodes.py
+src/laingo/lexer_parser/__init__.py
+src/laingo/lexer_parser/errors.py
+src/laingo/lexer_parser/parser.py
+tests/test_parser.py

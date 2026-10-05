@@ -1,0 +1,12 @@
+// lojika.mg — opérateurs logiques (Étape 2)
+x = 5
+y = 10
+
+raha x > 0 ary y > 0:
+    mamoaka("positif roa")
+
+raha x > 100 na y > 5:
+    mamoaka("iray farafahakeliny")
+
+raha tsy x > 10:
+    mamoaka("tsy lehibe noho 10 i x")

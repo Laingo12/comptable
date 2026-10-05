@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "laingo"
+version = "0.1.0"
+description = "Langage malgache transpilé vers C11 — CPU-first"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Laingo Andriambelo Ravo" }]
+dependencies = ["lark>=1.1.9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+laingo = "laingo.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

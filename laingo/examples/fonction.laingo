@@ -1,0 +1,10 @@
+// fonction.mg — asa + fiantsoana
+asa ampiana(a: Isa, b: Isa) -> Isa:
+    avereno a + b
+
+asa katroa(x: Isa) -> Isa:
+    avereno x * x
+
+mamoaka(ampiana(3, 4))
+mamoaka(katroa(5))
+mamoaka(ampiana(katroa(2), 10))
