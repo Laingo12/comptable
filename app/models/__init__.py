@@ -23,6 +23,7 @@ from app.models.salaires import PaiementSalaire  # noqa: F401
 from app.models.associes import Associe  # noqa: F401
 from app.models.prelevements import Prelevement  # noqa: F401
 from app.models.caisse_fg import CaisseFgMouvement  # noqa: F401
+from app.models.imports import ImportLigne
 
 __all__ = [
     "Base",
@@ -50,4 +51,5 @@ __all__ = [
     "Associe",
     "Prelevement",
     "CaisseFgMouvement",
+    "ImportLigne",
 ]

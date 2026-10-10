@@ -47,14 +47,14 @@ async def login_endpoint(
     )
 
 
-@router.post("/refresh", response_model=AccessToken)
+@router.post("/refresh", response_model=TokenPair)
 async def refresh_endpoint(
     body: RefreshRequest,
     request: Request,
     session: AsyncSession = Depends(get_session),
-) -> AccessToken:
+) -> TokenPair:
     try:
-        user, access, _new_refresh = await auth_service.refresh(
+        user, access, new_refresh = await auth_service.refresh(
             session, body.refresh_token,
             ip=request.client.host if request.client else None,
             user_agent=request.headers.get("user-agent"),
@@ -64,8 +64,9 @@ async def refresh_endpoint(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(exc),
         )
-    return AccessToken(
+    return TokenPair(
         access_token=access,
+        refresh_token=new_refresh,
         user=UserRead.model_validate(user),
     )
 

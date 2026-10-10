@@ -8,8 +8,11 @@ from app.api.v1 import (
     auth,
     caisse_fg,
     charges,
+    dashboard,
     eleves,
+    exports,
     familles,
+    imports,
     inscriptions,
     paiements,
     parametres,
@@ -36,3 +39,6 @@ api_router.include_router(charges.router)
 api_router.include_router(salaires.router)
 api_router.include_router(prelevements.router)
 api_router.include_router(caisse_fg.router)
+api_router.include_router(imports.router)
+api_router.include_router(dashboard.router)
+api_router.include_router(exports.router)
