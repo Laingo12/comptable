@@ -1,0 +1,162 @@
+smartkids/
+├── .env.example
+├── .gitignore
+├── .dockerignore
+├── README.md
+├── Makefile
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── Caddyfile
+├── scripts/
+│   ├── backup.sh
+│   ├── restore.sh
+│   └── entrypoint-api.sh
+├── db/
+│   └── init/
+│       ├── 00-extensions.sql          # citext, pgcrypto
+│       └── 01-roles.sql               # (optionnel) rôle applicatif
+│
+├── backend/
+│   ├── Dockerfile
+│   ├── pyproject.toml
+│   ├── alembic.ini
+│   ├── alembic/
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── core/
+│   │   │   ├── config.py              # Settings Pydantic
+│   │   │   ├── database.py            # engine async, session maker
+│   │   │   ├── security.py            # argon2 + JWT (access/refresh)
+│   │   │   ├── logging.py
+│   │   │   └── exceptions.py
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py                # Base + mixins (Timestamp, Versioned)
+│   │   │   ├── user.py                # users, refresh_tokens
+│   │   │   ├── audit.py               # audit_log
+│   │   │   ├── referentiel.py         # niveaux, mois_scolaires,
+│   │   │   │                          # types_paiement, modes_paiement
+│   │   │   ├── parametres.py          # annees_scolaires, parametres,
+│   │   │   │                          # grille_tarifaire, charges_catalogue
+│   │   │   ├── eleves.py              # familles, eleves
+│   │   │   ├── personnel.py           # employes, salaires_mensuels
+│   │   │   ├── paiements.py           # paiements (ledger encaissements)
+│   │   │   ├── charges.py             # charges (ledger décaissements)
+│   │   │   ├── salaires.py            # paiements_salaires
+│   │   │   ├── jessy.py               # retraits_jessy
+│   │   │   └── caisse_fg.py           # caisse_fg_mouvements
+│   │   ├── schemas/                   # Pydantic v2 : Create/Update/Read
+│   │   │   ├── auth.py
+│   │   │   ├── user.py
+│   │   │   ├── eleve.py
+│   │   │   ├── famille.py
+│   │   │   ├── paiement.py
+│   │   │   ├── charge.py
+│   │   │   ├── salaire.py
+│   │   │   ├── retrait_jessy.py
+│   │   │   ├── caisse_fg.py
+│   │   │   ├── parametre.py
+│   │   │   └── dashboard.py
+│   │   ├── repositories/
+│   │   │   ├── base.py
+│   │   │   ├── users.py
+│   │   │   ├── eleves.py
+│   │   │   ├── paiements.py
+│   │   │   ├── charges.py
+│   │   │   ├── salaires.py
+│   │   │   ├── jessy.py
+│   │   │   └── caisse_fg.py
+│   │   ├── services/
+│   │   │   ├── auth.py
+│   │   │   ├── ecolage.py             # dû / payé / statut / avance / retard
+│   │   │   ├── dashboard_mensuel.py
+│   │   │   ├── dashboard_annuel.py
+│   │   │   ├── tresorerie.py          # solde, plafond Jessy, priorisation
+│   │   │   ├── salaires.py            # 70% / 30%, manque à combler
+│   │   │   ├── charges.py             # réel vs prévisionnel
+│   │   │   ├── annulation.py          # écriture inverse
+│   │   │   └── exports.py             # openpyxl + WeasyPrint
+│   │   ├── permissions/
+│   │   │   └── rbac.py                # Role enum + matrice d'actions
+│   │   ├── views/                     # vues SQLAlchemy Core
+│   │   │   ├── v_ecolage_situation.py
+│   │   │   ├── v_tresorerie.py
+│   │   │   └── v_dashboard.py
+│   │   ├── api/
+│   │   │   ├── deps.py                # current_user, require(role)
+│   │   │   └── v1/
+│   │   │       ├── router.py
+│   │   │       ├── auth.py
+│   │   │       ├── users.py
+│   │   │       ├── annees.py
+│   │   │       ├── parametres.py
+│   │   │       ├── referentiels.py    # niveaux, mois, types, modes
+│   │   │       ├── familles.py
+│   │   │       ├── eleves.py
+│   │   │       ├── employes.py
+│   │   │       ├── paiements.py
+│   │   │       ├── charges.py
+│   │   │       ├── salaires.py
+│   │   │       ├── jessy.py
+│   │   │       ├── caisse_fg.py
+│   │   │       ├── dashboard.py
+│   │   │       ├── rapports.py
+│   │   │       └── exports.py
+│   │   └── seeds/
+│   │       └── bootstrap.py           # niveaux, types, modes, admin .env
+│   └── tests/
+│       ├── conftest.py
+│       ├── test_auth.py
+│       ├── test_ecolage.py
+│       ├── test_tresorerie.py
+│       ├── test_immutabilite_ledger.py
+│       └── test_dashboards.py
+│
+├── frontend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.ts
+│   ├── postcss.config.js
+│   ├── index.html
+│   ├── public/
+│   └── src/
+│       ├── main.tsx
+│       ├── App.tsx
+│       ├── router.tsx
+│       ├── lib/
+│       │   ├── api.ts                 # fetch + refresh automatique
+│       │   ├── queryClient.ts
+│       │   ├── auth.tsx
+│       │   ├── permissions.ts
+│       │   └── format.ts              # Ar, dates, statuts
+│       ├── components/
+│       │   ├── ui/                    # shadcn/ui
+│       │   ├── layout/                # Sidebar, Topbar, Protected
+│       │   ├── data-table/            # TanStack Table + pagination serveur
+│       │   └── forms/                 # RHF + Zod wrappers
+│       ├── features/
+│       │   ├── auth/
+│       │   ├── dashboard-mensuel/
+│       │   ├── dashboard-annuel/
+│       │   ├── eleves/
+│       │   ├── familles/
+│       │   ├── paiements/
+│       │   ├── charges/
+│       │   ├── salaires/
+│       │   ├── jessy/
+│       │   ├── caisse-fg/
+│       │   ├── parametres/
+│       │   ├── utilisateurs/
+│       │   └── rapports/
+│       ├── hooks/
+│       ├── types/                     # générés depuis OpenAPI
+│       └── styles/
+│
+└── caddy/
+    └── Caddyfile
