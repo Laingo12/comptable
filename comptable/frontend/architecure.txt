@@ -1,0 +1,76 @@
+frontend/
+├── package.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── vitest.config.ts
+├── playwright.config.ts
+├── tailwind.config.ts
+├── postcss.config.js
+├── .eslintrc.cjs
+├── .prettierrc
+├── .env.example
+├── .gitignore
+├── index.html
+├── Dockerfile
+├── nginx.conf
+├── scripts/
+│   └── gen-api.mjs
+├── tests/
+│   ├── setup.ts
+│   ├── refresh-single-flight.test.ts
+│   ├── can.test.tsx
+│   ├── protected-route.test.tsx
+│   └── e2e/
+│       └── login.spec.ts
+└── src/
+    ├── main.tsx
+    ├── App.tsx
+    ├── index.css
+    ├── types/
+    │   └── api.d.ts                 (stub, à regénérer)
+    ├── lib/
+    │   ├── utils.ts
+    │   ├── tokenStore.ts
+    │   ├── apiClient.ts
+    │   ├── format.ts
+    │   ├── errors.ts
+    │   └── permissions.ts
+    ├── components/
+    │   ├── ErrorBoundary.tsx
+    │   ├── layout/
+    │   │   ├── AppLayout.tsx
+    │   │   ├── Sidebar.tsx
+    │   │   ├── Topbar.tsx
+    │   │   └── UserMenu.tsx
+    │   └── ui/
+    │       ├── button.tsx
+    │       ├── input.tsx
+    │       ├── label.tsx
+    │       ├── card.tsx
+    │       ├── badge.tsx
+    │       ├── table.tsx
+    │       ├── dialog.tsx
+    │       ├── select.tsx
+    │       └── skeleton.tsx
+    ├── features/
+    │   ├── auth/
+    │   │   ├── api.ts
+    │   │   ├── schemas.ts
+    │   │   ├── AuthProvider.tsx
+    │   │   ├── Can.tsx
+    │   │   ├── ProtectedRoute.tsx
+    │   │   └── pages/LoginPage.tsx
+    │   ├── referentiels/
+    │   │   └── api.ts
+    │   └── eleves/
+    │       ├── api.ts
+    │       ├── schemas.ts
+    │       ├── components/
+    │       │   ├── ElevesFilters.tsx
+    │       │   └── ElevesTable.tsx
+    │       └── pages/ElevesPage.tsx
+    └── pages/
+        ├── DashboardPage.tsx
+        ├── NotFoundPage.tsx
+        └── ForbiddenPage.tsx
