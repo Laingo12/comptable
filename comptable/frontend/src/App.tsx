@@ -24,6 +24,7 @@ import { PaiementsListPage } from '@/features/paiements/pages/PaiementsListPage'
 import { PaiementCreatePage } from '@/features/paiements/pages/PaiementCreatePage';
 import { ChargesListPage } from '@/features/charges/pages/ChargesListPage';
 import { ChargeCreatePage } from '@/features/charges/pages/ChargeCreatePage';
+import { SalairesPage } from '@/features/salaires/pages/SalairesPage';
 
 const DevUiPage = import.meta.env.DEV
   ? lazy(() => import('@/pages/DevUiPage').then((m) => ({ default: m.DevUiPage })))
@@ -90,6 +91,10 @@ export function App() {
             </Route>
             <Route element={<ProtectedRoute resource="charges" action="create" />}>
               <Route path="/charges/nouvelle" element={<ChargeCreatePage />} />
+            </Route>
+                        {/* Salaires */}
+            <Route element={<ProtectedRoute resource="salaires_mensuels" action="read" />}>
+              <Route path="/salaires" element={<SalairesPage />} />
             </Route>
 
             {DevUiPage && (
