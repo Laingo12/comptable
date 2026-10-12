@@ -1,5 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Users2, Receipt, Wallet, Banknote } from 'lucide-react';
+import {
+  LayoutDashboard, Users, Users2, Receipt, Wallet, Banknote, HandCoins, UserCog,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/features/auth/useAuth';
 import type { Action, Resource } from '@/lib/permissions';
@@ -19,6 +21,8 @@ const ITEMS: Item[] = [
   { to: '/paiements', label: 'Paiements', icon: Receipt, resource: 'paiements', action: 'read' },
   { to: '/charges', label: 'Charges', icon: Wallet, resource: 'charges', action: 'read' },
   { to: '/salaires', label: 'Salaires', icon: Banknote, resource: 'salaires_mensuels', action: 'read' },
+  { to: '/prelevements', label: 'Prélèvements', icon: HandCoins, resource: 'prelevements', action: 'read' },
+  { to: '/associes', label: 'Associés', icon: UserCog, resource: 'associes', action: 'read' },
 ];
 
 interface Props {

@@ -25,6 +25,9 @@ import { PaiementCreatePage } from '@/features/paiements/pages/PaiementCreatePag
 import { ChargesListPage } from '@/features/charges/pages/ChargesListPage';
 import { ChargeCreatePage } from '@/features/charges/pages/ChargeCreatePage';
 import { SalairesPage } from '@/features/salaires/pages/SalairesPage';
+import { AssociesListPage } from '@/features/associes/pages/AssociesListPage';
+import { PrelevementsListPage } from '@/features/prelevements/pages/PrelevementsListPage';
+import { PrelevementCreatePage } from '@/features/prelevements/pages/PrelevementCreatePage';
 
 const DevUiPage = import.meta.env.DEV
   ? lazy(() => import('@/pages/DevUiPage').then((m) => ({ default: m.DevUiPage })))
@@ -92,9 +95,23 @@ export function App() {
             <Route element={<ProtectedRoute resource="charges" action="create" />}>
               <Route path="/charges/nouvelle" element={<ChargeCreatePage />} />
             </Route>
-                        {/* Salaires */}
+
+            {/* Salaires */}
             <Route element={<ProtectedRoute resource="salaires_mensuels" action="read" />}>
               <Route path="/salaires" element={<SalairesPage />} />
+            </Route>
+
+            {/* Associés */}
+            <Route element={<ProtectedRoute resource="associes" action="read" />}>
+              <Route path="/associes" element={<AssociesListPage />} />
+            </Route>
+
+            {/* Prélèvements */}
+            <Route element={<ProtectedRoute resource="prelevements" action="read" />}>
+              <Route path="/prelevements" element={<PrelevementsListPage />} />
+            </Route>
+            <Route element={<ProtectedRoute resource="prelevements" action="create" />}>
+              <Route path="/prelevements/nouveau" element={<PrelevementCreatePage />} />
             </Route>
 
             {DevUiPage && (
