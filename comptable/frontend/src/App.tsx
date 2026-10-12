@@ -22,6 +22,8 @@ import { InscriptionEditPage } from '@/features/inscriptions/pages/InscriptionEd
 import { EleveSituationPage } from '@/features/situation/pages/EleveSituationPage';
 import { PaiementsListPage } from '@/features/paiements/pages/PaiementsListPage';
 import { PaiementCreatePage } from '@/features/paiements/pages/PaiementCreatePage';
+import { ChargesListPage } from '@/features/charges/pages/ChargesListPage';
+import { ChargeCreatePage } from '@/features/charges/pages/ChargeCreatePage';
 
 const DevUiPage = import.meta.env.DEV
   ? lazy(() => import('@/pages/DevUiPage').then((m) => ({ default: m.DevUiPage })))
@@ -80,6 +82,14 @@ export function App() {
             </Route>
             <Route element={<ProtectedRoute resource="paiements" action="create" />}>
               <Route path="/paiements/nouveau" element={<PaiementCreatePage />} />
+            </Route>
+
+            {/* Charges */}
+            <Route element={<ProtectedRoute resource="charges" action="read" />}>
+              <Route path="/charges" element={<ChargesListPage />} />
+            </Route>
+            <Route element={<ProtectedRoute resource="charges" action="create" />}>
+              <Route path="/charges/nouvelle" element={<ChargeCreatePage />} />
             </Route>
 
             {DevUiPage && (

@@ -7,6 +7,7 @@ export type MoisScolaireRead = components['schemas']['MoisScolaireRead'];
 export type GrilleTarifaireRead = components['schemas']['GrilleTarifaireRead'];
 export type TypePaiementRead = components['schemas']['TypePaiementRead'];
 export type ModePaiementRead = components['schemas']['ModePaiementRead'];
+export type ChargeCatalogueRead = components['schemas']['ChargeCatalogueRead'];
 
 export const referentielsApi = {
   async niveaux(): Promise<NiveauRead[]> {
@@ -35,6 +36,10 @@ export const referentielsApi = {
   },
   async modesPaiement(): Promise<ModePaiementRead[]> {
     const { data } = await apiClient.get<ModePaiementRead[]>('/modes-paiement');
+    return data;
+  },
+  async chargesCatalogue(): Promise<ChargeCatalogueRead[]> {
+    const { data } = await apiClient.get<ChargeCatalogueRead[]>('/charges-catalogue');
     return data;
   },
 };
