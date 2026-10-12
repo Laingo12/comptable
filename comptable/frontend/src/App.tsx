@@ -28,6 +28,8 @@ import { SalairesPage } from '@/features/salaires/pages/SalairesPage';
 import { AssociesListPage } from '@/features/associes/pages/AssociesListPage';
 import { PrelevementsListPage } from '@/features/prelevements/pages/PrelevementsListPage';
 import { PrelevementCreatePage } from '@/features/prelevements/pages/PrelevementCreatePage';
+import { CaisseFgListPage } from '@/features/caisse_fg/pages/CaisseFgListPage';
+import { CaisseFgCreatePage } from '@/features/caisse_fg/pages/CaisseFgCreatePage';
 
 const DevUiPage = import.meta.env.DEV
   ? lazy(() => import('@/pages/DevUiPage').then((m) => ({ default: m.DevUiPage })))
@@ -112,6 +114,13 @@ export function App() {
             </Route>
             <Route element={<ProtectedRoute resource="prelevements" action="create" />}>
               <Route path="/prelevements/nouveau" element={<PrelevementCreatePage />} />
+            </Route>
+            {/* Caisse FG */}
+            <Route element={<ProtectedRoute resource="caisse_fg" action="read" />}>
+              <Route path="/caisse-fg" element={<CaisseFgListPage />} />
+            </Route>
+            <Route element={<ProtectedRoute resource="caisse_fg" action="create" />}>
+              <Route path="/caisse-fg/nouveau" element={<CaisseFgCreatePage />} />
             </Route>
 
             {DevUiPage && (

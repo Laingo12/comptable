@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, Users, Users2, Receipt, Wallet, Banknote, HandCoins, UserCog,
+  LayoutDashboard, Users, Users2, Receipt, Wallet, Banknote, HandCoins, UserCog, PiggyBank,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/features/auth/useAuth';
@@ -23,6 +23,7 @@ const ITEMS: Item[] = [
   { to: '/salaires', label: 'Salaires', icon: Banknote, resource: 'salaires_mensuels', action: 'read' },
   { to: '/prelevements', label: 'Prélèvements', icon: HandCoins, resource: 'prelevements', action: 'read' },
   { to: '/associes', label: 'Associés', icon: UserCog, resource: 'associes', action: 'read' },
+  { to: '/caisse-fg', label: 'Caisse FG', icon: PiggyBank, resource: 'caisse_fg', action: 'read' },
 ];
 
 interface Props {
