@@ -1,18 +1,40 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/features/auth/useAuth';
+import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { DashboardMensuelPage } from '@/features/dashboard/pages/DashboardMensuelPage';
+import { DashboardAnnuelPage } from '@/features/dashboard/pages/DashboardAnnuelPage';
+
+const TABS = [
+  { to: '/', label: 'Mensuel' },
+  { to: '/dashboard/annuel', label: 'Annuel' },
+];
 
 export function DashboardPage() {
-  const { user } = useAuth();
+  const location = useLocation();
+  const isAnnuel = location.pathname.startsWith('/dashboard/annuel');
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Tableau de bord</h1>
-      <Card>
-        <CardHeader><CardTitle>Bienvenue</CardTitle></CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Connecté en tant que <strong>{user?.full_name}</strong> ({user?.role}).
-          Les indicateurs seront ajoutés à l'étape 3.
-        </CardContent>
-      </Card>
+    <div>
+      <nav className="mb-4 flex gap-1 border-b" aria-label="Vue du tableau de bord">
+        {TABS.map((t) => {
+          const active = t.to === '/' ? !isAnnuel : isAnnuel;
+          return (
+            <Link
+              key={t.to}
+              to={t.to}
+              className={cn(
+                '-mb-px border-b-2 px-3 py-2 text-sm',
+                active
+                  ? 'border-primary font-medium text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground',
+              )}
+              aria-current={active ? 'page' : undefined}
+            >
+              {t.label}
+            </Link>
+          );
+        })}
+      </nav>
+      {isAnnuel ? <DashboardAnnuelPage /> : <DashboardMensuelPage />}
     </div>
   );
 }

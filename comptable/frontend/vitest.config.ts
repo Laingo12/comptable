@@ -13,7 +13,6 @@ export default defineConfig({
     exclude: ['tests/e2e/**', 'node_modules/**'],
     testTimeout: 20_000,
     hookTimeout: 20_000,
-    // Réduit la contention : max 4 workers sur Windows pour stabiliser les durées.
     poolOptions: {
       threads: { maxThreads: 4, minThreads: 1 },
     },

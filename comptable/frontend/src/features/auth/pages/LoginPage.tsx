@@ -5,7 +5,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { FormField } from '@/components/FormField';
 import { useAuth } from '../useAuth';
 import { loginSchema, type LoginForm } from '../schemas';
@@ -39,15 +39,26 @@ export function LoginPage() {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <Card className="w-full max-w-sm shadow-md">
-        <CardHeader>
-          <CardTitle className="text-center text-primary">SMART KIDS</CardTitle>
-          <p className="text-center text-sm text-muted-foreground">
+    <div
+      className="flex min-h-screen items-center justify-center p-4"
+      style={{
+        background:
+          'linear-gradient(180deg, hsl(var(--primary-soft)) 0%, hsl(var(--background)) 55%)',
+      }}
+    >
+      <Card className="w-full max-w-sm border-none shadow-lg">
+        <CardContent className="pt-8 pb-8">
+          {/* Logo centré, ~200 px de large, marges ≥ 0,5× la hauteur du logo */}
+          <div className="mb-8 flex justify-center">
+            <img
+              src="/brand/logo.png"
+              alt="SMART KIDS"
+              className="h-auto w-[200px] max-w-full object-contain"
+            />
+          </div>
+          <p className="mb-6 text-center text-sm text-muted-foreground">
             Gestion scolaire — Connexion
           </p>
-        </CardHeader>
-        <CardContent>
           <form onSubmit={onSubmit} className="space-y-4" noValidate>
             <FormField label="Identifiant" htmlFor="username" error={errors.username?.message} required>
               <Input id="username" autoComplete="username" autoFocus {...register('username')} />

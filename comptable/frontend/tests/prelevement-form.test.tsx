@@ -5,17 +5,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { PrelevementForm } from '@/features/prelevements/components/PrelevementForm';
 
-const { mockedAssocies } = vi.hoisted(() => ({
-  mockedAssocies: [
-    { id: 1, nom: 'Jessy', plafond_mensuel: 5_000_000,
-      versement_fixe_mensuel: 3_000_000, versement_fixe_mois_debut_ordre: 2,
-      is_active: true, version: 1, created_at: '', updated_at: '' },
-  ],
-}));
-
 vi.mock('@/features/associes/api', () => ({
   associesApi: {
-    list: vi.fn().mockResolvedValue(mockedAssocies),
+    list: vi.fn().mockResolvedValue([
+      {
+        id: 1,
+        nom: 'Jessy',
+        plafond_mensuel: 5_000_000,
+        versement_fixe_mensuel: 3_000_000,
+        versement_fixe_mois_debut_ordre: 2,
+        is_active: true,
+        version: 1,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+      },
+    ]),
   },
 }));
 
@@ -42,6 +46,18 @@ function renderForm(props: Partial<React.ComponentProps<typeof PrelevementForm>>
   );
 }
 
+/** Attend que le select Associé contienne au moins une option métier. */
+async function waitForAssociesOption(): Promise<void> {
+  await waitFor(
+    () => {
+      const select = screen.getByLabelText(/^Associé/i) as HTMLSelectElement;
+      // 1 = placeholder "— Choisir —", 2 = Jessy
+      expect(select.options.length).toBeGreaterThan(1);
+    },
+    { timeout: 5000 },
+  );
+}
+
 describe('<PrelevementForm>', () => {
   it('affiche les erreurs de validation sur champs requis', async () => {
     const onSubmit = vi.fn();
@@ -57,12 +73,12 @@ describe('<PrelevementForm>', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it("soumet un prélèvement valide", async () => {
+  it('soumet un prélèvement valide', async () => {
     const onSubmit = vi.fn();
     const user = userEvent.setup();
     renderForm({ onSubmit });
 
-    await screen.findByRole('option', { name: 'Jessy' });
+    await waitForAssociesOption();
 
     await user.selectOptions(screen.getByLabelText(/^Associé/i), '1');
     await user.clear(screen.getByLabelText(/^Montant/i));
@@ -88,7 +104,8 @@ describe('<PrelevementForm>', () => {
     const user = userEvent.setup();
     renderForm({ onSubmit });
 
-    await screen.findByRole('option', { name: 'Jessy' });
+    await waitForAssociesOption();
+
     await user.selectOptions(screen.getByLabelText(/^Associé/i), '1');
     await user.clear(screen.getByLabelText(/^Montant/i));
     await user.type(screen.getByLabelText(/^Montant/i), '1000');

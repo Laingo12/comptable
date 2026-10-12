@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -203,7 +204,6 @@ export function AssociesListPage() {
 }
 
 // --- Form interne --------------------------------------------------------
-
 interface AssocieFormDialogProps {
   initial?: AssocieRead | null;
   submitting?: boolean;
@@ -216,7 +216,7 @@ function AssocieFormDialog({
   initial = null, submitting, fieldErrors, onSubmit, onCancel,
 }: AssocieFormDialogProps) {
   const {
-    register, handleSubmit, formState: { errors },
+    register, handleSubmit, setError, formState: { errors },
   } = useForm<AssocieFormValues>({
     resolver: zodResolver(associeFormSchema),
     defaultValues: {
@@ -228,6 +228,16 @@ function AssocieFormDialog({
       is_active: initial?.is_active ?? true,
     },
   });
+
+  // Propager les erreurs 422 renvoyées par le parent sur les champs connus.
+  useEffect(() => {
+    if (!fieldErrors) return;
+    for (const [field, message] of Object.entries(fieldErrors)) {
+      if (field in associeFormSchema.shape) {
+        setError(field as keyof AssocieFormValues, { type: 'server', message });
+      }
+    }
+  }, [fieldErrors, setError]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
@@ -300,4 +310,5 @@ function AssocieFormDialog({
       </div>
     </form>
   );
+
 }

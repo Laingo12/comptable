@@ -2,48 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   DESIGN TOKENS — Charte SMART KIDS (issus du logo)
+   Sources : violet #391990 · cyan #01A5E5 · vert #96C614
+   Règle contraste : le vert et le cyan NE SONT PAS utilisables comme
+   couleur de texte sur fond blanc (ratio < 4.5:1). Ils servent de
+   fonds (`-soft`) avec du texte foncé (`-dark`) par-dessus.
+   ===================================================================== */
+
 @layer base {
   :root {
-    /* Palette A — « Encre & Soleil » (active par défaut) */
-    --primary:            224 76% 40%;
+    /* --- Marque --- */
+    --primary:            256 70% 33%;   /* #391990 violet */
     --primary-foreground: 0 0% 100%;
-    --accent:             38 92% 50%;
-    --accent-foreground:  24 10% 10%;
+    --primary-soft:       256 70% 96%;   /* violet très clair */
+    --primary-dark:       256 70% 22%;
 
-    /* Palette B — « Corail & Ciel » (à activer en remplaçant les 4 lignes ci-dessus)
-    --primary:            347 89% 50%;
-    --primary-foreground: 0 0% 100%;
-    --accent:             199 89% 48%;
-    --accent-foreground:  204 100% 97%;
-    */
+    --accent:             197 99% 45%;   /* #01A5E5 cyan */
+    --accent-foreground:  0 0% 100%;
+    --accent-soft:        197 99% 96%;
+    --accent-dark:        197 99% 25%;
 
+    --success:            76 82% 43%;    /* #96C614 vert */
+    --success-foreground: 0 0% 100%;
+    --success-soft:       76 82% 94%;
+    --success-dark:       76 82% 20%;
+
+    /* --- Neutres --- */
     --background:         0 0% 100%;
-    --foreground:         222 47% 11%;
+    --foreground:         256 30% 12%;
     --card:               0 0% 100%;
-    --card-foreground:    222 47% 11%;
-    --muted:              210 40% 96%;
+    --card-foreground:    256 30% 12%;
+    --muted:              256 20% 96%;
     --muted-foreground:   215 16% 47%;
-    --border:             214 32% 91%;
-    --input:              214 32% 91%;
-    --ring:               224 76% 40%;
+    --border:             256 20% 91%;
+    --input:              256 20% 91%;
+    --ring:               256 70% 33%;
 
-    --success:            142 76% 36%;
-    --success-foreground: 138 76% 97%;
+    /* --- Sémantiques --- */
     --warning:            32 95% 44%;
     --warning-foreground: 48 96% 89%;
+    --warning-soft:       45 96% 92%;
+    --warning-dark:       25 95% 25%;
+
     --danger:             0 72% 51%;
     --danger-foreground:  0 86% 97%;
-    --info:               199 89% 48%;
+    --danger-soft:        0 86% 96%;
+    --danger-dark:        0 72% 30%;
+
+    --info:               197 99% 45%;   /* aligné sur accent (cyan) */
     --info-foreground:    204 100% 97%;
+    --info-soft:          197 99% 96%;
+    --info-dark:          197 99% 25%;
 
-    --radius:             0.625rem;
+    /* --- Palette graphiques (Recharts) --- */
+    --chart-1:            256 70% 33%;   /* violet */
+    --chart-2:            197 99% 45%;   /* cyan */
+    --chart-3:            76 82% 43%;    /* vert */
+    --chart-4:            215 16% 47%;   /* gris moyen */
+    --chart-5:            215 16% 70%;   /* gris clair */
 
-    --shadow-sm:          0 1px 2px 0 rgb(0 0 0 / 0.04);
-    --shadow-md:          0 4px 12px -2px rgb(0 0 0 / 0.08);
-    --shadow-lg:          0 12px 32px -4px rgb(0 0 0 / 0.12);
+    /* --- Divers --- */
+    --radius: 0.625rem;
 
-    --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
-    --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 12px 32px -4px rgb(0 0 0 / 0.12);
   }
 
   html, body, #root { height: 100%; }

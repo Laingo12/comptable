@@ -5,7 +5,6 @@ import { AuthProvider } from '@/features/auth/AuthProvider';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { DashboardPage } from '@/pages/DashboardPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ForbiddenPage } from '@/pages/ForbiddenPage';
 import { ElevesPage } from '@/features/eleves/pages/ElevesPage';
@@ -31,9 +30,25 @@ import { PrelevementCreatePage } from '@/features/prelevements/pages/Prelevement
 import { CaisseFgListPage } from '@/features/caisse_fg/pages/CaisseFgListPage';
 import { CaisseFgCreatePage } from '@/features/caisse_fg/pages/CaisseFgCreatePage';
 
+// --- Pages chargées à la demande (réduit le chunk principal) ------------
+
+const DashboardPage = lazy(() =>
+  import('@/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
+);
+const ImportPage = lazy(() =>
+  import('@/features/import/pages/ImportPage').then((m) => ({ default: m.ImportPage })),
+);
 const DevUiPage = import.meta.env.DEV
   ? lazy(() => import('@/pages/DevUiPage').then((m) => ({ default: m.DevUiPage })))
   : null;
+
+function PageFallback() {
+  return (
+    <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+      Chargement…
+    </div>
+  );
+}
 
 export function App() {
   return (
@@ -44,7 +59,14 @@ export function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route index element={<DashboardPage />} />
+            <Route
+              index
+              element={
+                <Suspense fallback={<PageFallback />}>
+                  <DashboardPage />
+                </Suspense>
+              }
+            />
 
             {/* Élèves */}
             <Route element={<ProtectedRoute resource="eleves" action="read" />}>
@@ -115,6 +137,7 @@ export function App() {
             <Route element={<ProtectedRoute resource="prelevements" action="create" />}>
               <Route path="/prelevements/nouveau" element={<PrelevementCreatePage />} />
             </Route>
+
             {/* Caisse FG */}
             <Route element={<ProtectedRoute resource="caisse_fg" action="read" />}>
               <Route path="/caisse-fg" element={<CaisseFgListPage />} />
@@ -123,11 +146,23 @@ export function App() {
               <Route path="/caisse-fg/nouveau" element={<CaisseFgCreatePage />} />
             </Route>
 
+            {/* Import Excel (lazy) */}
+            <Route element={<ProtectedRoute resource="parametres" action="create" />}>
+              <Route
+                path="/import"
+                element={
+                  <Suspense fallback={<PageFallback />}>
+                    <ImportPage />
+                  </Suspense>
+                }
+              />
+            </Route>
+
             {DevUiPage && (
               <Route
                 path="/dev/ui"
                 element={
-                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Chargement…</div>}>
+                  <Suspense fallback={<PageFallback />}>
                     <DevUiPage />
                   </Suspense>
                 }

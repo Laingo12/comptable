@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/PageHeader';
 import { DataTable } from '@/components/DataTable';
 import { EmptyState } from '@/components/EmptyState';
-import { MoneyCell } from '@/components/MoneyCell';
+
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { formatAr, formatDate } from '@/lib/format';
 import { useAuth } from '@/features/auth/useAuth';
